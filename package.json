@@ -1,6 +1,21 @@
 {
   "dependencies": {
+    "bibtex-parse-js": "^0.0.24",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "googleapis": "^120.0.0"
-  }
+    "googleapis": "^122.0.0",
+    "lodash": "^4.17.21",
+    "treemap-js": "^1.2.1"
+  },
+  "name": "levylab-publications",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
