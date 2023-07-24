@@ -11,8 +11,10 @@
   "name": "levylab-publications",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "node index.js"
+    "start": "node src/index.js",
+    "vercel-build": "echo hello"
   },
   "keywords": [],
   "author": "",
