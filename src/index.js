@@ -1,11 +1,12 @@
-import express, { json as _json } from "express";
-import cors from "cors";
-import _ from "lodash";
-import { google } from 'googleapis';
-import { toJSON } from 'bibtex-parse-js';
-import TreeMap from "treemap-js";
-import dotenv from 'dotenv'
-dotenv.config()
+const express = require("express");
+const cors = require("cors");
+const _ = require("lodash");
+const {google} = require("googleapis");
+const bibtexParse = require('bibtex-parse-js');
+const TreeMap = require("treemap-js");
+const serverless = require("serverless-http");
+require('dotenv').config()
+
 
 const scopes = [
     'https://www.googleapis.com/auth/drive'
@@ -23,18 +24,25 @@ const auth = new google.auth.JWT(
 
 const drive = google.drive({ version: "v3", auth });
 const app = express();
-app.use(_json());
+app.use(express.json());
 app.use(cors());
+const router = express.Router();
 
-app.listen(3000, () => console.log("API server is running"));
+// app.listen(3000, () => console.log("API server is running"));
 
 // Sending AllPubs through server
-app.get("/bibtexFile", async (req, res) => {
+router.get("/bibtexFile", async (req, res) => {
     const allPubs = await getBibtex();
-    res.json(allPubs);
+    res.json(allPubs)
 })
 
-export default app;
+app.use("/.netlify/functions/index", router);
+module.exports = app;
+module.exports.handler = serverless(app);
+
+
+
+
 async function getBibtex(){
     const res = await drive.files.get({
       fileId: '1_ghA-P4Dsh2o74-ypU4Szm8gczZRJ7kY',  // ID of LevyLab Publications
@@ -60,7 +68,7 @@ async function getBibtex(){
 
         // Using bibtex parser to create json object of each publication and pushing into allPubs
         publications.forEach(element => {
-            var json = toJSON('@' + element + '}\n\n');
+            var json = bibtexParse.toJSON('@' + element + '}\n\n');
             allPubs.push(json[0]);
         });
 
